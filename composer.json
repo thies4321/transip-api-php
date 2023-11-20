@@ -1,0 +1,36 @@
+{
+    "name": "thies4321/transip-api-php",
+    "description": "TransIP v6 API PHP client",
+    "license": "MIT",
+    "type": "standard",
+    "homepage": "https://github.com/thies4321/transip-api-php",
+    "require": {
+        "php": "^8.2",
+        "php-http/client-common": "^2.7",
+        "php-http/discovery": "^1.19",
+        "php-http/httplug": "^2.4"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.39",
+        "guzzlehttp/guzzle": "^7.8",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^10",
+        "psy/psysh": "^0.11.22"
+    },
+    "autoload": {
+        "psr-4": {
+            "TransIP\\Api\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TransIP\\Api\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true,
+            "php-http/discovery": true
+        }
+    }
+}
