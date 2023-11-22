@@ -7,10 +7,22 @@ namespace TransIP\Api\HttpClient\Plugin;
 use Http\Client\Common\Plugin;
 use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
-use TransIP\Api\Exception\ApiLimitExceededException;
+use Psr\Http\Message\ResponseInterface;
+use TransIP\Api\Exception\BadRequestException;
+use TransIP\Api\Exception\ConflictException;
 use TransIP\Api\Exception\ExceptionInterface;
+use TransIP\Api\Exception\ForbiddenException;
+use TransIP\Api\Exception\InternalServerErrorException;
+use TransIP\Api\Exception\MethodNotAllowedException;
+use TransIP\Api\Exception\NotAcceptableException;
+use TransIP\Api\Exception\NotFoundException;
+use TransIP\Api\Exception\NotImplementedException;
+use TransIP\Api\Exception\RequestTimeoutException;
 use TransIP\Api\Exception\RuntimeException;
-use TransIP\Api\Exception\ValidationFailedException;
+use TransIP\Api\Exception\TooManyRequestException;
+use TransIP\Api\Exception\UnauthorizedException;
+use TransIP\Api\Exception\UnprocessableEntityException;
+use TransIP\Api\HttpClient\Message\ResponseMediator;
 
 final class ExceptionThrower implements Plugin
 {
@@ -29,14 +41,20 @@ final class ExceptionThrower implements Plugin
 
     private static function createException(int $status, string $message): ExceptionInterface
     {
-        if (400 === $status || 422 === $status) {
-            return new ValidationFailedException($message, $status);
-        }
-
-        if (429 === $status) {
-            return new ApiLimitExceededException($message, $status);
-        }
-
-        return new RuntimeException($message, $status);
+        return match ($status) {
+            400 => BadRequestException::forMessage($message),
+            401 => UnauthorizedException::forMessage($message),
+            403 => ForbiddenException::forMessage($message),
+            404 => NotFoundException::forMessage($message),
+            405 => MethodNotAllowedException::forMessage($message),
+            406 => NotAcceptableException::forMessage($message),
+            408 => RequestTimeoutException::forMessage($message),
+            409 => ConflictException::forMessage($message),
+            422 => UnprocessableEntityException::forMessage($message),
+            429 => TooManyRequestException::forMessage($message),
+            500 => InternalServerErrorException::forMessage($message),
+            501 => NotImplementedException::forMessage($message),
+            default => new RuntimeException($message, $status),
+        };
     }
 }
