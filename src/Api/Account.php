@@ -15,4 +15,9 @@ class Account extends AbstractApi
     {
         return $this->get('invoices');
     }
+
+    public function invoice(string $invoiceNumber): array
+    {
+
+    }
 }

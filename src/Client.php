@@ -12,6 +12,7 @@ use Http\Client\Common\Plugin\RedirectPlugin;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use TransIP\Api\Api\Account;
+use TransIP\Api\Api\Domains;
 use TransIP\Api\Api\General;
 use TransIP\Api\HttpClient\Builder;
 use TransIP\Api\HttpClient\Plugin\Authentication;
@@ -78,6 +79,11 @@ class Client
     public function account(): Account
     {
         return new Account($this);
+    }
+
+    public function domains(): Domains
+    {
+        return new Domains($this);
     }
 
 //    /**

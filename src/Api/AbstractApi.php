@@ -7,11 +7,16 @@ namespace TransIP\Api\Api;
 use Http\Client\Exception as HttpClientException;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 use TransIP\Api\Client;
 use TransIP\Api\HttpClient\Message\ResponseMediator;
 use TransIP\Api\HttpClient\Util\JsonArray;
 use TransIP\Api\HttpClient\Util\QueryStringBuilder;
 
+use TransIP\Api\Serializer\DomainDenormalizer;
+use TransIP\Api\Serializer\DomainsDenormalizer;
 use function array_filter;
 use function array_merge;
 use function count;
@@ -23,11 +28,21 @@ abstract class AbstractApi
     private const URI_PREFIX = '/v6/';
 
     private Client $client;
+    protected SerializerInterface $serializer;
     private ?int $perPage = null;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?SerializerInterface $serializer = null)
     {
         $this->client = $client;
+        $this->serializer = $serializer ?? new Serializer(
+            [
+                new DomainDenormalizer(),
+                new DomainsDenormalizer(),
+            ],
+            [
+                new JsonEncoder()
+            ],
+        );
     }
 
     /**
@@ -130,9 +145,9 @@ abstract class AbstractApi
                 return $value > 0;
             })
         ;
-        $resolver->setDefined('per_page')
-            ->setAllowedTypes('per_page', 'int')
-            ->setAllowedValues('per_page', function ($value): bool {
+        $resolver->setDefined('pageSize')
+            ->setAllowedTypes('pageSize', 'int')
+            ->setAllowedValues('pageSize', function ($value): bool {
                 return $value > 0 && $value <= 100;
             })
         ;
