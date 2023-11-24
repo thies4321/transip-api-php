@@ -1,25 +1,27 @@
 <?php
 
-declare(strict_types=1);
-
-namespace TransIP\Api\Serializer\Converter;
+namespace TransIP\Api\Util;
 
 use DateTime;
+use Exception;
 use TransIP\Api\Entity\Domain;
 
-final class DomainConverter
-{
-    public static function forArray(array $domain): Domain
-    {
-        $nameservers = [];
-        foreach ($domain['nameservers'] as $nameserver) {
-            $nameservers[] = NameserverConverter::forArray($nameserver);
-        }
+use function array_map;
 
-        $contacts = [];
-        foreach ($domain['contacts'] as $contact) {
-            $contacts[] = ContactConverter::forArray($contact);
-        }
+final class ArrayDomain
+{
+    /**
+     * @throws Exception
+     */
+    public static function denormalize(array $domain): Domain
+    {
+        $nameservers = array_map(function (array $nameserver) {
+            return ArrayNameserver::denormalize($nameserver);
+        }, $domain['nameservers'] ?? []);
+
+        $contacts = array_map(function (array $contact) {
+            return ArrayContact::denormalize($contact);
+        }, $domain['contacts'] ?? []);
 
         return new Domain(
             $domain['name'],

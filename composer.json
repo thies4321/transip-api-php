@@ -8,8 +8,7 @@
         "php": "^8.2",
         "php-http/client-common": "^2.7",
         "php-http/discovery": "^1.19",
-        "php-http/httplug": "^2.4",
-        "symfony/serializer": "^6.3"
+        "php-http/httplug": "^2.4"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.39",
