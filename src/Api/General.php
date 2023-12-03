@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace TransIP\Api\Api;
 
 use Http\Client\Exception as HttpClientException;
+use TransIP\Api\Entity\Product;
+use TransIP\Api\Entity\ProductElement;
+use TransIP\Api\Util\ArrayProduct;
+use TransIP\Api\Util\ArrayProductElement;
+use function array_map;
 use function sprintf;
 
 class General extends AbstractApi
@@ -14,7 +19,16 @@ class General extends AbstractApi
      */
     public function products(): array
     {
-        return $this->get('products');
+        $products = [];
+
+        foreach ($this->get('products')['products'] as $category => $productsArray) {
+            foreach ($productsArray as $product) {
+                $product['category'] = $category;
+                $products[] = Product::createFromArray($product);
+            }
+        }
+
+        return $products;
     }
 
     /**
@@ -22,7 +36,9 @@ class General extends AbstractApi
      */
     public function productElements(string $productName): array
     {
-        return $this->get(sprintf('products/%s/elements', $productName));
+        return array_map(function (array $productElement) {
+            return ProductElement::createFromArray($productElement);
+        }, $this->get(sprintf('products/%s/elements', $productName))['productElements']);
     }
 
     /**

@@ -13,4 +13,24 @@ final class DnsEntry
         public string $content,
     ) {
     }
+
+    public static function createFromArray(array $dnsEntry): self
+    {
+        return new self(
+            $dnsEntry['name'],
+            $dnsEntry['expire'],
+            $dnsEntry['type'],
+            $dnsEntry['content'],
+        );
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'expire' => $this->expire,
+            'type' => $this->type,
+            'content' => $this->content,
+        ];
+    }
 }

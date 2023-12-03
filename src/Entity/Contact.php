@@ -23,4 +23,44 @@ final class Contact
         public string $country,
     ) {
     }
+
+    public static function createFromArray(array $contact): self
+    {
+        return new self(
+            $contact['type'],
+            $contact['firstName'],
+            $contact['lastName'],
+            $contact['companyName'],
+            $contact['companyKvk'],
+            $contact['companyType'],
+            $contact['street'],
+            $contact['number'],
+            $contact['postalCode'],
+            $contact['city'],
+            $contact['phoneNumber'],
+            $contact['faxNumber'],
+            $contact['email'],
+            $contact['country'],
+        );
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'type' => $this->type,
+            'firstName' => $this->firstName,
+            'lastName' => $this->lastName,
+            'companyName' => $this->companyName,
+            'companyKvk' => $this->companyKvk,
+            'companyType' => $this->companyType,
+            'street' => $this->street,
+            'number' => $this->number,
+            'postalCode' => $this->postalCode,
+            'city' => $this->city,
+            'phoneNumber' => $this->phoneNumber,
+            'faxNumber' => $this->faxNumber,
+            'email' => $this->email,
+            'country' => $this->country,
+        ];
+    }
 }
